@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:function_tree/function_tree.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,26 +29,49 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  void _incrementCounter() {
+  String _texto="";
+  void _mandarDato(String cadena) {
     setState(() {
+      if(_texto.contains("Expresion"))_texto="";
+      _texto+=cadena;
     });
   }
-Widget _ConstruirBoton(String texto){
-return Container(
+  void _borrarDato() {
+    setState(() {
+      if(_texto.contains("Expresion"))_texto="";
+      if(_texto.isNotEmpty) _texto=_texto.substring(0,_texto.length-1);
+    });
+  }
 
+  void _calcular() {
+    setState(() {
+    try{
+      _texto=_texto.interpret().toString();
+    }
+        catch(e){
+        _texto="Expresion invalida";
+        };
+    });
+  }
+
+Widget _ConstruirBotonMandarDato(String texto){
+return Container(
     child: SizedBox(
       width: 75,
       height: 75,
       child: ElevatedButton(
 
 
-        onPressed: (){},
+        onPressed: (){
+          _mandarDato(texto);
+          
+        },
         child: Text(
             texto,
           textAlign: TextAlign.center,
@@ -60,6 +84,52 @@ return Container(
 );
 
 }
+
+  Widget _ConstruirBotonBorrar(String texto){
+    return Container(
+
+        child: SizedBox(
+          width: 125,
+          height: 75,
+          child: ElevatedButton(
+            onPressed: (){
+            _borrarDato();
+            },
+            child: Text(
+              texto,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 30
+              ),
+            ),
+          ),
+        )
+    );
+
+  }
+
+  Widget _ConstruirBotonCalcular(String texto){
+    return Container(
+
+        child: SizedBox(
+          width: 125,
+          height: 75,
+          child: ElevatedButton(
+            onPressed: (){
+              _calcular();
+            },
+            child: Text(
+              texto,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 30
+              ),
+            ),
+          ),
+        )
+    );
+
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -82,7 +152,10 @@ return Container(
             Expanded(
                 flex: 2,
                 child: Text(
-                  "Salida..."
+                  style: TextStyle(
+                    fontSize: 30
+                  ),
+                  _texto
                 ),
             ),
             Expanded(
@@ -100,43 +173,44 @@ return Container(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _ConstruirBoton("7"),
-                      _ConstruirBoton("8"),
-                      _ConstruirBoton("9"),
-                      _ConstruirBoton("/"),
+                      _ConstruirBotonMandarDato("7"),
+                      _ConstruirBotonMandarDato("8"),
+                      _ConstruirBotonMandarDato("9"),
+                      _ConstruirBotonMandarDato("/"),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _ConstruirBoton("4"),
-                      _ConstruirBoton("5"),
-                      _ConstruirBoton("6"),
-                      _ConstruirBoton("*"),
+                      _ConstruirBotonMandarDato("4"),
+                      _ConstruirBotonMandarDato("5"),
+                      _ConstruirBotonMandarDato("6"),
+                      _ConstruirBotonMandarDato("*"),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _ConstruirBoton("1"),
-                      _ConstruirBoton("2"),
-                      _ConstruirBoton("3"),
-                      _ConstruirBoton("-"),
+                      _ConstruirBotonMandarDato("1"),
+                      _ConstruirBotonMandarDato("2"),
+                      _ConstruirBotonMandarDato("3"),
+                      _ConstruirBotonMandarDato("-"),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _ConstruirBoton("."),
-                      _ConstruirBoton("0"),
-                      _ConstruirBoton("C"),
-                      _ConstruirBoton("+"),
+                      _ConstruirBotonMandarDato("."),
+                      _ConstruirBotonMandarDato("0"),
+                      _ConstruirBotonMandarDato("C"),
+                      _ConstruirBotonMandarDato("+"),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _ConstruirBoton("-"),
+                      _ConstruirBotonBorrar("<="),
+                      _ConstruirBotonCalcular("=="),
                     ],
                   ),
                 ],
